@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="Author" content="OpenTutorials">
+	<meta http-equiv="x-ua-compatible" content="IE=EDGE">
+	<meta name="viewport" content="width=1280">
+	<title>Hello Flask - Flask로 만드는 블로그</title>
+
+</head>
+<body id="topic_index" class="module view sidebar everystudy logged_out revision">
+
+<h2>간단한 Flask 어플리케이션 만들기</h2>
+
+<p>프로젝트 디렉터리에 `app.py` 파일을 추가합니다.</p>
+
+<pre class="brush: shell">
+flask_blog/
+├── venv/
+└── app.py</pre>
+
+<p>간단한 Flask 어플리케이션은 <a href="http://flask.pocoo.org/">Flask 공식 홈페이지</a>에 예제가 있습니다. 이 예제를 바탕으로 `app.py`를 작성하고 저장하겠습니다.</p>
+
+<pre class="brush: python">
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route(&#39;/&#39;)
+@app.route(&#39;/index&#39;)
+def index():
+    return &#39;Hello Flask!&#39;</pre>
+
+<p>위 코드는 `Flask` 클래스로부터 간단한 인스턴스를 만들어서 웹 서비스를 제공합니다. 여기서 `Flask` 클래스에 전달된 `__name__` 파라미터는 Flask 어플리케이션을 구분하기 위한 구분자로 사용되며 거의 모든 경우에 `__name__`를 전달해주면 완벽하게 동작합니다.</p>
+
+<p>그 다음 함수에 `@app.route` 데코레이터가 달려있습니다. 이 데코레이터는 URL과 함수를 이어주는 역할을 하는데, 위의 경우에는 라우트가 `/`와 `/index`로 두 개 달려 있습니다. 따라서 웹 브라우저가 `/` 또는 `/index` 페이지를 요청하게 되면 어플리케이션에서 `index`함수를 호출하여 그 결과를 웹 브라우저에 전달하게 됩니다.</p>
+
+<h3>Flask 서버 실행</h3>
+
+<p>Flask 서버를 실행하기 위해 필요한 환경 변수들을 설정합니다. 모든 작업은 가상 환경이 실행중인 상태에서 수행해야 합니다.</p>
+
+<pre class="brush: shell">
+(venv) PS&gt; $env:FLASK_APP=&quot;app.py&quot;
+(venv) PS&gt; $env:FLASK_DEBUG=&quot;True&quot;</pre>
+
+<p>`FLASK_APP`은 Flask 서버를 기동할 때, 실행할 어플리케이션을 지정해주는 역할을 합니다. `FLASK_DEBUG`는 Flask 어플리케이션에 디버그 모드를 활성화 하여 문제가 발생한 경우 어떤 문제가 발생했는지 자세히 알려줍니다. 또한 어플리케이션 코드가 변경되었을 때, 자동으로 Flask 서버를 재시작하여 매번 서버를 재시작해야 하는 귀찮음을 덜어줍니다. 만약 자동으로 서버를 재시작하고 싶지 않은 경우에는 `flask run --no-restart` 스위치를 넣어주면 됩니다.</p>
+
+<p>환경 변수 설정이 끝나면 다음과 같은 명령을 이용해 서버를 실행할 수 있습니다.</p>
+
+<pre class="brush: shell">
+(venv) PS&gt; flask run
+ * Serving Flask app &quot;app.py&quot; (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 101-892-184
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)</pre>
+
+<p>`* Running on`메시지가 뜨면 웹 브라우저를 열고 주소창에 http://localhost:5000 을 입력한 다음 접속합니다.</p>
+
+<p style="text-align:center"><img alt="인덱스 페이지" height="253" src="https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/3669/9289.png" width="500" /></p>
+
+<h3>About 페이지 추가</h3>
+
+<p>간단한 어플리케이션에 about 페이지를 추가해보겠습니다.</p>
+
+<pre class="brush: python">
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route(&#39;/&#39;)
+@app.route(&#39;/index&#39;)
+def index():
+    return &#39;Hello Flask!&#39;
+
+# 추가
+@app.route(&#39;/about&#39;)
+def about():
+  return &#39;About 페이지&#39;</pre>
+
+<p>코드를 수정한 후, 저장을 하면 디버그 모드가 켜져 있기 때문에 터미널에 `* Detected change in &#39;flask_blog\&#39;` 이런 문구가 나오면서 서버가 자동으로 재시작 됩니다. 따라서 코드를 수정한 다음 서버를 다시 실행할 필요가 없습니다.</p>
+
+<p>추가한 About 페이지를 확인하기 위해서는 http://localhost:5000/about 을 접속합니다.</p>
+
+<p style="text-align:center"><img alt="어바웃 페이지" height="253" src="https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/3669/9290.png" width="500" /></p>
+
+<p>이를 통해 `@app.route` 데코레이터가 어떤식으로 동작하는지 대략적으로 파악할 수 있습니다. 웹 브라우저가 `/` 페이지를 요청하면 `@app.route(&#39;/&#39;)`가 달려있는 `index` 함수를 실행해서 그 결과를 전달해주고, `/about` 페이지를 요청하면 `@app.route(&#39;/about&#39;)`이 달려있는 `about` 함수의 결과를 전달합니다.</p>
+
+
+</body>
+</html>

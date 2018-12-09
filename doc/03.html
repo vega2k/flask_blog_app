@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="Author" content="OpenTutorials">
+    <meta http-equiv="x-ua-compatible" content="IE=EDGE">
+    <meta name="viewport" content="width=1280">
+    <title>부트 스트랩 - Flask로 만드는 블로그</title>
+
+</head>
+<body id="topic_index" class="module view sidebar everystudy logged_out">
+
+            <div class="entry-area">
+                <article class="hentry">
+
+                    <hgroup>
+                        <h1 class="entry-title">부트 스트랩</h1>
+                        <div class="props">
+                            <time datetime="">2018-08-07 23:18:56</time>
+                        </div>
+                    </hgroup>
+
+                    <div id="content" class="entry-content">
+                        <p>이전에 우리는 Flask의 템플릿 기능을 이용해 사용자에게 보여질 부분과 어플리케이션 코드를 분리했습니다. 또한 jinja2를 이용해 html의 내용을 동적으로 생성하도록 코드를 작성하여 여러 상황에 유연하게 대처할 수 있게 코드를 작성했습니다.</p>
+
+                        <p>이번에는 어플리케이션의 디자인을 수정하도록 하겠습니다. 기능을 변경하는 것이 아닌 디자인을 변경하는 만큼 아래 코드를 복사 붙여 넣기 하는 것을 추천합니다.</p>
+
+                        <h2>부트 스트랩(Bootstrap)</h2>
+
+                        <p>부트스트랩은 웹을 개발하기 위한 프레임워크로 손쉽게 반응형 웹을 만들 수 있습니다.</p>
+
+                        <p>먼저 `layout.html`에 홈페이지의 기본이 될 테마를 작성합니다.</p>
+
+                        <pre class="brush: html">
+&lt;!DOCTYPE HTML&gt;
+&lt;html lang=&quot;kr&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, shrink-to-fit=no&quot;&gt;
+    &lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+    &lt;meta name=&quot;author&quot; content=&quot;&quot;&gt;
+
+    {% if title %}
+      &lt;title&gt;Flask 블로그 - {{ title }}&lt;/title&gt;
+    {% else %}
+      &lt;title&gt;Flask 블로그&lt;/title&gt;
+    {% endif %}
+
+    &lt;!-- Bootstrap core CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css&quot;
+          integrity=&quot;sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO&quot; crossorigin=&quot;anonymous&quot;&gt;
+
+    &lt;!-- Font awesome CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://use.fontawesome.com/releases/v5.2.0/css/all.css&quot;
+          integrity=&quot;sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ&quot; crossorigin=&quot;anonymous&quot;&gt;
+
+    &lt;!-- Custom styles for this template --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;{{ url_for(&#39;static&#39;, filename=&#39;layout.css&#39;) }}&quot;&gt;
+    {% block stylesheet %}{% endblock %}
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;header class=&quot;site-header&quot;&gt;
+      &lt;nav class=&quot;navbar navbar-expand-md fixed-top navbar-dark bg-dark mb-4&quot;&gt;
+        &lt;a class=&quot;navbar-brand&quot; href=&quot;{{ url_for(&#39;index&#39;) }}&quot;&gt;Flask 블로그&lt;/a&gt;
+        &lt;button class=&quot;navbar-toggler&quot; type=&quot;button&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbarCollapse&quot; aria-controls=&quot;navbarCollapse&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Toggle navigation&quot;&gt;
+          &lt;span class=&quot;navbar-toggler-icon&quot;&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbarCollapse&quot;&gt;
+          &lt;ul class=&quot;navbar-nav mr-auto&quot;&gt;
+            &lt;li class=&quot;nav-item active&quot;&gt;
+              &lt;a class=&quot;nav-link&quot; href=&quot;{{ url_for(&#39;index&#39;) }}&quot;&gt;Home&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class=&quot;nav-item&quot;&gt;
+              &lt;a class=&quot;nav-link&quot; href=&quot;{{ url_for(&#39;about&#39;) }}&quot;&gt;About&lt;/a&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+
+          &lt;!-- Navbar right side --&gt;
+          &lt;div class=&quot;navbar-nav mt-mb-0&quot;&gt;
+            &lt;a class=&quot;nav-item nav-link&quot; href=&quot;{#{ url_for(&#39;login&#39;) }#}&quot;&gt;Login&lt;/a&gt;
+            &lt;a class=&quot;nav-item nav-link&quot; href=&quot;{#{ url_for(&#39;registration&#39;) }#}&quot;&gt;Register&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/nav&gt;
+    &lt;/header&gt;
+
+    &lt;main role=&quot;main&quot;&gt;
+    &lt;!-- Main content block --&gt;
+    {% block content %}{% endblock %}
+    &lt;/main&gt;
+
+    &lt;!-- Bootstrap core JavaScript
+    ================================================== --&gt;
+    &lt;!-- Placed at the end of the document so the pages load faster --&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.3.1.min.js&quot;
+        	integrity=&quot;sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js&quot;
+            integrity=&quot;sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js&quot;
+            integrity=&quot;sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+
+    &lt;!-- Font awesome --&gt;
+    &lt;script defer src=&quot;https://use.fontawesome.com/releases/v5.2.0/js/all.js&quot;
+            integrity=&quot;sha384-4oV5EgaV02iISL2ban6c/RmotsABqE4yZxZLcYMAdG7FAPsyHYAPpywE9PJo+Khy&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+
+    &lt;!-- Custom scripts --&gt;
+    {% block scripts %}{% endblock %}
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+                        <p>웹 사이트가 제대로 보이기 위해서는 다음과 같은 스타일 시트 파일이 필요합니다. 스타일 시트는 `static`폴더에 `layout.css` 파일을 하나 만듭니다.</p>
+
+                        <pre class="brush: css">
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  padding-top: 56px;
+}</pre>
+
+                        <p>그 다음은 메인 페이지를 수정하도록 하겠습니다. `index.html`을 수정합니다.</p>
+
+                        <pre class="brush: html">
+{% extends &#39;layout.html&#39; %}
+
+{% block content %}
+&lt;div class=&quot;container&quot;&gt;
+  &lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;col-md-8&quot;&gt;
+      {% for post in posts %}
+      &lt;article&gt;
+        &lt;hr&gt;
+        &lt;div class=&quot;row&quot;&gt;
+          &lt;div class=&quot;col&quot;&gt;
+            &lt;a class=&quot;h1&quot; href=&quot;#&quot;&gt;{{ post.title }}&lt;/a&gt;
+            &lt;p class=&quot;text-justify&quot;&gt;{{ post.content }}&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;col-md-2 d-flex flex-column&quot;&gt;
+            &lt;img class=&quot;rounded-circle mx-auto&quot; src=&quot;#&quot; data-src=&quot;holder.js/64x64&quot; width=&quot;64px&quot; height=&quot;64px&quot;&gt;
+            &lt;p class=&quot;text-muted text-center&quot;&gt;{{ post.author.username }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;small class=&quot;text-muted&quot;&gt;{{ post.date_posted.strftime(&#39;%Y-%m-%d&#39;) }}&lt;/small&gt;
+      &lt;/article&gt;
+      {% endfor %}
+    &lt;/div&gt;
+
+    &lt;aside class=&quot;col-md-4 my-3&quot;&gt;
+      &lt;h2&gt;사이드 바&lt;/h2&gt;
+      &lt;ul class=&quot;list-group&quot;&gt;
+        &lt;li class=&quot;list-group-item&quot;&gt;사이드바 아이템1&lt;/li&gt;
+        &lt;li class=&quot;list-group-item&quot;&gt;사이드바 아이템2&lt;/li&gt;
+        &lt;li class=&quot;list-group-item&quot;&gt;사이드바 아이템3&lt;/li&gt;
+        &lt;li class=&quot;list-group-item&quot;&gt;사이드바 아이템4&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/aside&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+{% endblock %}
+
+{% block scripts %}
+  &lt;script src=https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.min.js&gt;&lt;/script&gt;
+{% endblock %}</pre>
+
+                        <p>마지막으로 About 페이지를 수정합니다. `about.html` 파일을 수정합니다.</p>
+
+                        <pre class="brush: html">
+{% extends &#39;layout.html&#39; %}
+
+{% block content %}
+&lt;div class=&quot;container&quot;&gt;
+    &lt;h1&gt;About 페이지&lt;/h1&gt;
+&lt;/div&gt;
+{% endblock %}</pre>
+
+                        <p>파일을 다 만들고 난 다음 디렉터리 구조는 다음과 같습니다.</p>
+
+                        <pre class="brush: shell">
+flask_blog/
+├── templates/
+│   ├── about.html
+│   ├── index.html
+│   └── layout.html
+├── static/
+│   └── layout.css
+├── venv/
+└── app.py</pre>
+
+                        <p>디자인 변경이 끝난 후, 홈페이지에 접속해보면 다음과 같습니다.</p>
+
+                        <ul>
+                            <li>메인 페이지</li>
+                        </ul>
+
+                        <p style="text-align:center"><img alt="" height="375" src="https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/3669/9312.png" width="500" /></p>
+
+                        <ul>
+                            <li>About 페이지</li>
+                        </ul>
+
+                        <p style="text-align:center"><img alt="" height="375" src="https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/3669/9313.png" width="500" /></p>
+
+                        <p>현재까지 작성된 전체 코드는 <a href="https://github.com/LazyRichard/flask_blog_tutorial/tree/Chapter_3">Flask blog tutorial Chapter3</a>에서 확인할 수 있습니다.</p>
+
+                    </div>
+
+                </article>
+            </div>
+</body>
+</html>
